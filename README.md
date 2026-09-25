@@ -1,44 +1,95 @@
-﻿# InevioLibs — три независимые сетевые технологии
+# InevioLibs — живая сеть для автономных устройств
 
-Библиотеки, выделенные из InevioNet. Каждая самодостаточна (только stdlib Python),
-собирается и работает НЕЗАВИСИМО от проекта. Точка входа и точка выхода у каждой свои.
+Экосистема из пяти пакетов: транспорт, мост, обучение,
+разведка, маскировка. Работает без интернета, сервера,
+администратора. Только stdlib Python.
 
-## Структура
-| Папка          | Технология              | Суть одним предложением |
-|----------------|-------------------------|-------------------------|
-| supernode\     | Коллективное обучение   | Узел, доказавший надёжную доставку, становится супер-узлом и передаёт опыт сети |
-| sporerecon\    | Разведка сети           | Реальные факты о сети (DNS, маршрут, ISP, соседи, тип инфраструктуры) через nslookup/tracert/arp без прав админа |
-| stealth\       | Адаптивная скрытность   | Замкнутый цикл «зонд -> маскировка -> отправка -> обучение» с байесовским выбором канала |
+## Компоненты
+
+| Пакет | Назначение | PyPI | GitHub |
+|---|---|---|---|
+| **spore-net** | Живая сеть: 8 адаптеров транспорта, дыхание, зимовка | [pypi](https://pypi.org/project/spore-net/) | [→](spore-net/) |
+| **spore-bridge** | Единый мост между библиотеками | [pypi](https://pypi.org/project/spore-bridge/) | [→](spore-bridge/) |
+| **supernode** | Коллективное обучение через гифы | [pypi](https://pypi.org/project/supernode/) | [→](supernode/) |
+| **sporerecon** | Пассивная разведка сети | [pypi](https://pypi.org/project/sporerecon/) | [→](sporerecon/) |
+| **inevio-stealth** | Адаптивная маскировка | [pypi](https://pypi.org/project/inevio-stealth/) | [→](inevio-stealth/) |
+
+## Установка
+
+Всё одной командой:
+
+    pip install inevio-ecosystem
+
+Или по отдельности:
+
+    pip install spore-net
+    pip install spore-bridge
+    pip install supernode
+    pip install sporerecon
+    pip install inevio-stealth
+
+## Быстрый старт
+
+    from spore_bridge import SporeBridge
+    from spore.soil import ПочваSocket
+
+    bridge = SporeBridge('my-node', port=8700)
+    bridge.loop(blocking=False)
+
+    from supernode import SuperNodeManager, attach_bridge
+    from sporerecon import attach_bridge as recon_attach
+    from stealth import attach_bridge as stealth_attach
+
+    manager = SuperNodeManager()
+    attach_bridge(manager, bridge)
 
 ## Сборка и установка
-    .\build_all.ps1              # тесты всех трёх + wheel-пакеты в dist\
-    .\build_all.ps1 -Exe         # то же + standalone .exe (PyInstaller)
-    .\build_all.ps1 -SkipTests   # только сборка, без тестов
-    .\install_all.ps1            # установка всех wheel из dist\ в текущий Python
 
-По отдельности:
-    cd supernode ; python -m pip wheel . --no-deps -w ..\dist
-    python -m pip install ..\dist\supernode-1.0.0-py3-none-any.whl
+    .\build_all.ps1              # тесты + wheel в dist\
+    .\build_all.ps1 -Exe         # + standalone .exe
+    .\build_all.ps1 -SkipTests   # только сборка
+    .\install_all.ps1            # установка всех wheel
 
-## Тесты (каждая библиотека отдельно)
+## Тесты
+
     cd supernode  ; python -m unittest discover -s tests -v
     cd sporerecon ; python -m unittest discover -s tests -v
     cd stealth    ; python -m unittest discover -s tests -v
 
-## REST-порты (для любых языков: C#, Go, JS, PHP...)
-    supernode  -> http://127.0.0.1:8701
-    sporerecon -> http://127.0.0.1:8702
-    stealth    -> http://127.0.0.1:8704  (приёмник фрагментов: 8703)
+## REST-порты
 
-## Где применяется ВНЕ InevioNet
-    supernode  — роевая робототехника, federated learning, V2X, любые mesh, где обученный узел учит остальных
-    sporerecon — инвентаризация сетей, red-team разведка без админа, антифрод-геолокация по DNS/ISP
-    stealth    — исследование covert-каналов и DPI/IDS на СВОИХ сетях, privacy-инструменты (только легально)
+    supernode     -> http://127.0.0.1:8701
+    sporerecon    -> http://127.0.0.1:8702
+    stealth       -> http://127.0.0.1:8704  (приёмник фрагментов: 8703)
 
-В каждой папке лежит свой README.md: что это, для чего, как использовать.
+## Архитектура
+
+    supernode    sporerecon    inevio-stealth
+        │            │              │
+        └────────────┼──────────────┘
+                     │
+                     ▼
+              spore-bridge
+                     │
+                     ▼
+                spore-net
+                     │
+       ┌─────────────┼─────────────┐
+       │             │             │
+       ▼             ▼             ▼
+    UDP        Wi-Fi Direct      BLE
+                           (+ 5 других почв)
+
+## Где применяется
+
+- **spore-net** — транспорт для любого P2P, mesh, IoT
+- **supernode** — роевая робототехника, federated learning, V2X
+- **sporerecon** — инвентаризация сетей, red-team, антифрод
+- **inevio-stealth** — privacy-инструменты, исследование covert-каналов
+- **FPV-дроны** — обход РЭБ через mesh
 
 ## Лицензирование (Dual Licensing)
-- Сообщество: AGPL-3.0 (файл LICENSE)
-- Бизнес: коммерческая лицензия (файл LICENSE-COMMERCIAL.md)
-- Copyright (c) 2026 dimon027081
 
+- **Сообщество:** AGPL-3.0 (файл [LICENSE](LICENSE))
+- **Бизнес:** коммерческая лицензия (файл [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md))
+- **Copyright (c) 2026 dimon027081**
