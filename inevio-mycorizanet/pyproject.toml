@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inevio-mycorizanet"
+version = "1.0.0"
+description = "МИКОРИЗАnet — overlay-организм с автономным выбором транспорта"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{name = "Inevio"}]
+license = "MIT"
+dependencies = []

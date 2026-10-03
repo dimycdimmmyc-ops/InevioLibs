@@ -1,0 +1,40 @@
+"""МИКОРИЗАnet — константы."""
+
+# Адресация
+TLD = "spore"
+ULA_PREFIX = "fd"
+
+# Мембрана
+MEMBRANE_SLOT = 60.0
+MEMBRANE_MAX_AGE = 180
+
+# Феромоны
+TRAIL_EVAPORATION = 0.02
+TRAIL_DEPOSIT = 1.0
+TRAIL_CAP = 10.0
+TRAIL_PRUNE = 0.05
+TRAIL_EXPLORE = 0.15
+
+# Симбиоз
+SYMBIOSIS_MIN_MUTUAL = 1.0
+SYMBIOSIS_PRUNE_AFTER = 600.0
+
+# Кворум
+QUORUM_THRESHOLD = 3.0
+QUORUM_DECAY = 0.15
+QUORUM_HYSTERESIS = 0.5
+
+# Осмос
+OSMOSIS_CAPACITY = 100.0
+OSMOSIS_BUFFER_MAX = 64
+OSMOSIS_NEIGHBOR_TTL = 120.0
+
+# Иммунитет
+IMMUNE_BLOCK_THRESHOLD = 3.0
+IMMUNE_DECAY = 0.01
+
+# Тик
+TICK_INTERVAL = 5.0
+
+# Транспорты
+TRANSPORT_TYPES = ['udp', 'tcp', 'dns', 'icmp', 'http']
